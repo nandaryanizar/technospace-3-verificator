@@ -2,12 +2,20 @@ import requests
 import config
 import boto3
 import face
-from fastapi import FastAPI, File, UploadFile, Request, HTTPException
 from typing import List
-import sys
+from fastapi import FastAPI, File, UploadFile, Request, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 client = boto3.client('rekognition')
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/healthz")
