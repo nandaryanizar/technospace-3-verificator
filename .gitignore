@@ -9,3 +9,5 @@ face2.jpg
 face_covered.jpg
 glasses.jpg
 *__python__*
+build/
+.idea
