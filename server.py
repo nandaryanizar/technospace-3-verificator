@@ -17,7 +17,7 @@ def healthz():
 
 @app.post("/api/register")
 async def register_face(request: Request, file: UploadFile = File(...)):
-    if 'gauth-token' not in request.headers:
+    if 'GAuth-Token' not in request.headers:
         raise HTTPException(401, "unauthorized")
 
     img_str = await file.read()
@@ -26,7 +26,7 @@ async def register_face(request: Request, file: UploadFile = File(...)):
         raise HTTPException(400, "face not detected")
 
     files = {'file': bytes(img_str)}
-    headers = {'gauth-token': request.headers['gauth-token']}
+    headers = {'GAuth-Token': request.headers['GAuth-Token']}
     response = requests.post("http://" + config.AUTH_SERVICE_ADDR + "/api/user/image", files=files, headers=headers)
     if not response.status_code == 200 and not response.status_code == 201:
         raise HTTPException(response.status_code, response.reason)
@@ -44,7 +44,7 @@ async def register_face(request: Request, file: UploadFile = File(...)):
 
 @app.post("/api/verify/{user_id}")
 async def verify_face(request: Request, user_id, files: List[UploadFile] = File(...)):
-    if 'bearer-token' not in request.headers or 'gauth-token' not in request.headers:
+    if 'Bearer-Token' not in request.headers or 'GAuth-Token' not in request.headers:
         raise HTTPException(401, "unauthorized")
 
     if len(files) < 5:
@@ -64,12 +64,15 @@ async def verify_face(request: Request, user_id, files: List[UploadFile] = File(
 
     url = "http://" + config.AUTH_SERVICE_ADDR + "/api/user/" + str(user_id)
 
-    response = requests.get(url)
+    headers = {
+        'GAuth-Token': request.headers['GAuth-Token'],
+        'Bearer-Token': request.headers['Bearer-Token']
+    }
+    response = requests.get(url, headers=headers)
     if not response.status_code == 200 and not response.status_code == 201:
         raise HTTPException(response.status_code, response.reason)
-
     body = response.json()
-    result = face.compare(body['image_path'], bytes(img_bytestr), client)
+    result = face.compare(body['data']['image_path'], bytes(img_bytestr), client)
 
     if not result:
         raise HTTPException(400, "failed to verify face")
