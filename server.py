@@ -78,21 +78,3 @@ async def verify_face(request: Request, user_id, files: List[UploadFile] = File(
         raise HTTPException(400, "failed to verify face")
 
     return "face verified"
-
-def main():
-    # Replace sourceFile and targetFile with the image files you want to compare.
-    source_file = 'https://gobase-groupa.s3.us-east-2.amazonaws.com/media/a752b16a-0c29-11eb-b99b-0a05adc1166c.jpg'
-    target_file = 'face2.jpg'
-
-    target_file = open(target_file, 'rb')
-
-    same = face.compare(source_file, target_file.read(), client)
-    if same:
-        print("OK")
-    else:
-        print("NOT OK")
-
-    source_file.close()
-    target_file.close()
-
-main()
