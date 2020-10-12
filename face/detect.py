@@ -9,6 +9,6 @@ from config import config
 async def detect(img_str) -> bool:
     np_arr = np.fromstring(img_str, np.uint8)
     img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-    if face.detection.detect(img):
+    if face.detection.detect(img, 0.7):
         return False
     return True
