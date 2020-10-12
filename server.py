@@ -9,18 +9,11 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 client = boto3.client('rekognition')
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 @app.get("/healthz")
 def healthz():
     return "OK"
+
 
 @app.post("/register/")
 async def register_face(request: Request, file: UploadFile = File(...)):
@@ -50,6 +43,7 @@ async def register_face(request: Request, file: UploadFile = File(...)):
         "face_detected": face_detected,
         "data": body["data"]
     }
+
 
 @app.post("/verify/{user_id}")
 async def verify_face(request: Request, user_id, files: List[UploadFile] = File(...)):
