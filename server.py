@@ -15,7 +15,7 @@ def healthz():
     return "OK"
 
 
-@app.post("/api/register/")
+@app.post("/api/register")
 async def register_face(request: Request, file: UploadFile = File(...)):
     if 'bearer-token' not in request.headers or 'gauth-token' not in request.headers:
         raise HTTPException(401, "unauthorized")
