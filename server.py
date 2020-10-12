@@ -81,13 +81,12 @@ async def verify_face(request: Request, user_id, files: List[UploadFile] = File(
 
 def main():
     # Replace sourceFile and targetFile with the image files you want to compare.
-    source_file = 'face1.jpg'
+    source_file = 'https://gobase-groupa.s3.us-east-2.amazonaws.com/media/a752b16a-0c29-11eb-b99b-0a05adc1166c.jpg'
     target_file = 'face2.jpg'
 
-    source_file = open(source_file, 'rb')
     target_file = open(target_file, 'rb')
 
-    same = face.compare(source_file.read(), target_file.read(), client)
+    same = face.compare(source_file, target_file.read(), client)
     if same:
         print("OK")
     else:
@@ -95,3 +94,5 @@ def main():
 
     source_file.close()
     target_file.close()
+
+main()
