@@ -26,10 +26,7 @@ async def register_face(request: Request, file: UploadFile = File(...)):
         raise HTTPException(400, "face not detected")
 
     files = {'file': bytes(img_str)}
-    headers = {
-        'bearer-token': request.headers['bearer-token'],
-        'gauth-token': request.headers['gauth-token']
-    }
+    headers = {'gauth-token': request.headers['gauth-token']}
     response = requests.post("http://" + config.AUTH_SERVICE_ADDR + "/api/user/image", files=files, headers=headers)
     if not response.status_code == 200 and not response.status_code == 201:
         raise HTTPException(response.status_code, response.reason)
